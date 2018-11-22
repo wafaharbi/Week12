@@ -1,21 +1,18 @@
 package com.example.wafa.studentapp;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.graphics.Rect;
-import android.os.PersistableBundle;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
@@ -26,17 +23,22 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
-public class Notes extends AppCompatActivity {
+import de.hdodenhof.circleimageview.CircleImageView;
+
+public class Courses extends AppCompatActivity {
+
 
     private FirebaseAuth fAuth;
-    private RecyclerView mNotesList;
+    private RecyclerView courseListt;
     private GridLayoutManager gridLayoutManager;
 
-    private DatabaseReference fNotesDatabase;
+    private DatabaseReference reference ;
+
     private boolean isExist;
 
-    //Try
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
@@ -45,46 +47,42 @@ public class Notes extends AppCompatActivity {
 
         return true;
     }
+
+
+
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_notes);
+        setContentView(R.layout.activity_courses);
 
-        mNotesList = (RecyclerView) findViewById(R.id.notes_list);
 
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        courseListt = (RecyclerView) findViewById(R.id.course_list);
 
 
         gridLayoutManager = new GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false);
 
-        mNotesList.setHasFixedSize(true);
-        mNotesList.setLayoutManager(gridLayoutManager);
-        //gridLayoutManager.setReverseLayout(true);
-        //gridLayoutManager.setStackFromEnd(true);
-        mNotesList.addItemDecoration(new GridSpacingItemDecoration(2, dpToPx(10), true));
+        courseListt.setHasFixedSize(true);
+        courseListt.setLayoutManager(gridLayoutManager);
+
+        courseListt.addItemDecoration(new GridSpacingItemDecoration(2, dpToPx(10), true));
 
         fAuth = FirebaseAuth.getInstance();
+
+
+
 
 
         if (fAuth.getCurrentUser() != null)
         {
 
-            fNotesDatabase = FirebaseDatabase.getInstance().getReference().child("Notes").child(fAuth.getCurrentUser().getUid());
+            reference = FirebaseDatabase.getInstance().getReference().child("Courses").child(fAuth.getCurrentUser().getUid());
         }
-
 
         updateUI();
 
         loadData();
+
     }
-
-
-
-
-
-
-
 
 
     @Override
@@ -92,46 +90,54 @@ public class Notes extends AppCompatActivity {
         super.onStart();
 
     }
-
     private void loadData() {
-        Query query = fNotesDatabase.orderByValue();
-        FirebaseRecyclerAdapter<NoteModel, NoteViewHolder> firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<NoteModel, NoteViewHolder>(
 
-                NoteModel.class,
-                R.layout.single_note_layout,
-                NoteViewHolder.class,
+
+        Query query = reference.orderByValue();
+        FirebaseRecyclerAdapter<CourseModel, CourseViewHolder> firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<CourseModel, CourseViewHolder>(
+
+                CourseModel.class,
+                R.layout.single_course_item,
+                CourseViewHolder.class,
                 query
 
         ) {
             @Override
-            protected void populateViewHolder(final NoteViewHolder viewHolder, NoteModel model, int position) {
+            protected void populateViewHolder(final CourseViewHolder viewHolder, CourseModel model, int position) {
 
                 FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
-                final String noteId = getRef(position).getKey();
+                final String course_id = getRef(position).getKey();
 
-                fNotesDatabase.child(noteId).addValueEventListener(new ValueEventListener() {
+
+
+                reference.child(course_id).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        if (dataSnapshot.hasChild("title") && dataSnapshot.hasChild("timestamp")) {
 
 
-                            String title = dataSnapshot.child("title").getValue().toString();
+                        if (dataSnapshot.hasChild("name") && dataSnapshot.hasChild("timestamp")) {
+
+
+                            String title = dataSnapshot.child("name").getValue().toString();
                             String timestamp = dataSnapshot.child("timestamp").getValue().toString();
 
 
 
-                            viewHolder.setNoteTitle(title);
+                            viewHolder.setCourseTitle(title);
                             //viewHolder.setNoteTime(timestamp);
 
                             GetTimeAgo getTimeAgo = new GetTimeAgo();
-                            viewHolder.setNoteTime(getTimeAgo.getTimeAgo(Long.parseLong(timestamp), getApplicationContext()));
+
+                            viewHolder.setCourseTime(getTimeAgo.getTimeAgo(Long.parseLong(timestamp), getApplicationContext()));
 
                             viewHolder.noteCard.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
-                                    Intent intent = new Intent(Notes.this, NewNote.class);
-                                    intent.putExtra("noteId", noteId);
+
+
+                                    Intent intent = new Intent(Courses.this, NewCourse.class);
+                                    intent.putExtra("course_id", course_id);
                                     startActivity(intent);
                                 }
                             });
@@ -147,46 +153,22 @@ public class Notes extends AppCompatActivity {
 
             }
         };
-        mNotesList.setAdapter(firebaseRecyclerAdapter);
+        courseListt.setAdapter(firebaseRecyclerAdapter);
     }
+
 
     private void updateUI(){
 
         if (fAuth.getCurrentUser() != null){
             Log.i("MainActivity", "fAuth != null");
         } else {
-            Intent startIntent = new Intent(Notes.this, LoginStudent.class);
+            Intent startIntent = new Intent(Courses.this, LoginStudent.class);
             startActivity(startIntent);
             finish();
             Log.i("MainActivity", "fAuth == null");
         }
 
     }
-
-    /*@Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
-
-        getMenuInflater().inflate(R.menu.main_menu, menu);
-
-        return true;
-    }*/
-  /*  @Override
-
-    public boolean onOptionsItemSelected(MenuItem item) {
-        super.onOptionsItemSelected(item);
-
-        switch (item.getItemId()) {
-            case R.id.main_new_note_btn:
-                Intent newIntent = new Intent(Notes.this, NewNote.class);
-                startActivity(newIntent);
-                break;
-        }
-
-        return true;
-    }*/
-///////
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         super.onOptionsItemSelected(item);
@@ -196,7 +178,7 @@ public class Notes extends AppCompatActivity {
                 finish();
                 break;
             case R.id.main_new_note_btn:
-                Intent newIntent = new Intent(Notes.this, NewNote.class);
+                Intent newIntent = new Intent(Courses.this, NewCourse.class);
                 startActivity(newIntent);
 
                 break;

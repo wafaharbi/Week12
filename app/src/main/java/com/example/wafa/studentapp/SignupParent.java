@@ -215,6 +215,8 @@ public class SignupParent extends AppCompatActivity implements View.OnClickListe
 
                 }
                 else{
+                    progressDialog.dismiss();
+
                     Toast.makeText(getApplicationContext(), "choose different username " , Toast.LENGTH_SHORT).show();
 
                 }

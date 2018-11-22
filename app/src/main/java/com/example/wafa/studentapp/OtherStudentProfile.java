@@ -51,6 +51,7 @@ public class OtherStudentProfile extends AppCompatActivity {
 
         final String user_id=   getIntent().getStringExtra("user_id");
 
+
         id =(TextView) findViewById(R.id.idProfile);
 
 

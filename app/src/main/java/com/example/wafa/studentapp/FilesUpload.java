@@ -167,4 +167,10 @@ import com.google.firebase.storage.UploadTask;
                 break;
         }
     }
+
+    public  void lists(View v){
+
+            Intent i = new Intent(this, test.class);
+            startActivity(i);
+    }
 }

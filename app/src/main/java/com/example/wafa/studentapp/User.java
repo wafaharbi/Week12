@@ -3,7 +3,8 @@ package com.example.wafa.studentapp;
 
 public class User {
 
-    public String name,email , password , phone , username  , image , thumb_image  ,id;
+    public String name,email , password , phone , username  , image , thumb_image  ,id , coursename, attendance, quize, mid, finals;
+
 
     public User(String name, String email, String password,String username, String phone,String image , String thumb_image , String id){
         this.name= name;
@@ -46,6 +47,47 @@ public class User {
 
     }
 
+public User (String coursename ){
+        this.coursename = coursename;
+
+}
+
+
+    public String getAttendance() {
+        return attendance;
+    }
+
+    public String setAttendance(String attendance) {
+        this.attendance = attendance;
+        return attendance;
+    }
+
+    public String getQuize() {
+        return quize;
+    }
+
+    public String setQuize(String quize) {
+        this.quize = quize;
+        return quize;
+    }
+
+    public String getMid() {
+        return mid;
+    }
+
+    public String setMid(String mid) {
+        this.mid = mid;
+        return mid;
+    }
+
+    public String getFinals() {
+        return finals;
+    }
+
+    public String setFinals(String finals) {
+        this.finals = finals;
+        return finals;
+    }
 
     public String getName() {
         return name;
@@ -114,5 +156,14 @@ public class User {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getCoursename() {
+        return coursename;
+    }
+
+    public String setCoursename(String coursename) {
+        this.coursename = coursename;
+        return coursename;
     }
 }

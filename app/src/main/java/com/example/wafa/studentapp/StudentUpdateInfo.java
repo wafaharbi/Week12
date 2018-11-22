@@ -43,6 +43,7 @@ public class StudentUpdateInfo extends AppCompatActivity {
 
         key = (TextView) findViewById(R.id.stdID);
 
+
         studentName = (EditText) findViewById(R.id.updateName);
         studentEmail = (EditText) findViewById(R.id.updateEmail);
         studentPhone = (EditText) findViewById(R.id.updatePhone);

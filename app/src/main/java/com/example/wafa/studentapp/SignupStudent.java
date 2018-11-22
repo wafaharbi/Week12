@@ -39,6 +39,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
+import java.util.regex.Pattern;
 
 public class SignupStudent extends AppCompatActivity implements View.OnClickListener{
 
@@ -47,7 +48,7 @@ public class SignupStudent extends AppCompatActivity implements View.OnClickList
      FirebaseAuth auth;
      FirebaseDatabase firebaseDatabase;
      FirebaseUser firebaseUser;
-     DatabaseReference ref;
+     DatabaseReference ref , reference;
 
     private ProgressDialog progressDialog;
 
@@ -129,6 +130,8 @@ public class SignupStudent extends AppCompatActivity implements View.OnClickList
             studentPassword.requestFocus();
             return;
         }
+
+
         if(password.length() < 6){
             studentPassword.setError(" password at least 6 charecter");
             studentPassword.requestFocus();
@@ -175,82 +178,90 @@ public class SignupStudent extends AppCompatActivity implements View.OnClickList
                 if(dataSnapshot.getChildrenCount()>0){
 
 
-                    Toast.makeText(getApplicationContext(), "correct username " , Toast.LENGTH_SHORT).show();
+                    progressDialog.dismiss();
+
+                    Toast.makeText(getApplicationContext(), "choose different username " , Toast.LENGTH_SHORT).show();
 
                 }
                 else
                     {
 
-                        Toast.makeText(getApplicationContext(), "choose different username " , Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "correct username " , Toast.LENGTH_SHORT).show();
+
+                        auth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+
+                                if(task.isSuccessful()){
 
 
-                    }
+                                    final  String id= firebaseUser.getUid();
+
+                                    User student= new User(name ,email,password,phone,username ,image , thumb_image , id) ;
+
+                                    // ref= firebaseDatabase.getReference().child("Student");
+
+                                    HashMap<String, String> userMap = new HashMap<>();
+
+                                    userMap.put("name", name);
+                                    userMap.put("username" , username);
+                                    userMap.put("email" , email);
+                                    userMap.put("password" , password);
+                                    userMap.put("phone" , phone);
+                                    userMap.put("id" , id);
+                                    userMap.put("image", "default");
+                                    userMap.put("thumb_image", "default");
 
 
-                auth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
 
-                        if(task.isSuccessful()){
-
-                            final  String id= firebaseUser.getUid();
-
-                            User student= new User(name ,email,password,phone,username ,image , thumb_image , id) ;
-
-                            // ref= firebaseDatabase.getReference().child("Student");
-
-                            HashMap<String, String> userMap = new HashMap<>();
-
-                            userMap.put("name", name);
-                            userMap.put("username" , username);
-                            userMap.put("email" , email);
-                            userMap.put("password" , password);
-                            userMap.put("phone" , phone);
-                            userMap.put("id" , id);
-                            userMap.put("image", "default");
-                            userMap.put("thumb_image", "default");
-
-                            FirebaseDatabase.getInstance().getReference("Student").child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                                    .setValue(userMap).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
+                                    FirebaseDatabase.getInstance().getReference("Student").child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                            .setValue(userMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
 
 
-                                    if (task.isSuccessful()) {
-                                        Toast.makeText(getApplicationContext(), " Student signup successflly", Toast.LENGTH_SHORT).show();
-                                        progressDialog.dismiss();
-                                        finish();
-                                        Intent i = new Intent(getApplicationContext(), StudentHome.class);
-                                        startActivity(i);
 
-                                    }
+                                            if (task.isSuccessful()) {
+                                                Toast.makeText(getApplicationContext(), " Student signup successflly", Toast.LENGTH_SHORT).show();
+                                                progressDialog.dismiss();
+                                                finish();
+                                                Intent i = new Intent(getApplicationContext(), StudentHome.class);
+                                                startActivity(i);
 
-                                    else {
-                                        progressDialog.dismiss();
-                                        if( task.getException() instanceof FirebaseAuthUserCollisionException)
-                                        {
-                                            Toast.makeText(getApplicationContext()," You are already signin " , Toast.LENGTH_SHORT).show();
+                                            }
 
+                                            else {
+                                                progressDialog.dismiss();
+                                                if( task.getException() instanceof FirebaseAuthUserCollisionException)
+                                                {
+                                                    Toast.makeText(getApplicationContext()," You are already signin " , Toast.LENGTH_SHORT).show();
+
+                                                }
+                                                else {
+                                                    progressDialog.dismiss();
+
+                                                    Toast.makeText(getApplicationContext(), " Please try again", Toast.LENGTH_SHORT).show();
+
+                                                }
+
+                                            }
                                         }
-                                        else {
-                                            progressDialog.dismiss();
-
-                                            Toast.makeText(getApplicationContext(), " Please try again", Toast.LENGTH_SHORT).show();
-
-                                        }
-
-                                    }
+                                    });
                                 }
-                            });
-                        }
-                        else{
-                            progressDialog.dismiss();
+                                else{
 
-                            Toast.makeText(getApplicationContext(), "an error accoured , Please try again", Toast.LENGTH_SHORT).show();
 
-                        }
+                                    progressDialog.dismiss();
+
+                                    Toast.makeText(getApplicationContext(), "an error accoured , Please try again", Toast.LENGTH_SHORT).show();
+
+                                }
+                            }
+                        });
                     }
-                });
+
+
+
             }
 
             @Override

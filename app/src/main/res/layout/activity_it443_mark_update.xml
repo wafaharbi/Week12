@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/col"
-    tools:context=".ParentUpadate">
-
+    tools:context=".IT443MarkUpdate">
 
     <EditText
-        android:id="@+id/updateName"
+        android:id="@+id/updateQizeMark"
         android:layout_width="296dp"
         android:layout_height="wrap_content"
         android:layout_alignStart="@+id/updateName"
@@ -21,35 +20,22 @@
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         android:ems="10"
-        android:hint="Enter new Name"
+        android:hint="Enter quiz mark "
         android:inputType="textEmailAddress" />
 
     <EditText
-        android:id="@+id/updateEmail"
-        android:layout_width="296dp"
-        android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/updateName"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="164dp"
-        android:ems="10"
-        android:hint="Enter new Email"
-        android:inputType="textEmailAddress" />
-
-    <EditText
-        android:id="@+id/updatePhone"
+        android:id="@+id/updateFinalMark"
         android:layout_width="294dp"
         android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/updateName"
         android:layout_alignParentTop="true"
-        android:layout_marginStart="6dp"
-        android:layout_marginTop="236dp"
+        android:layout_alignStart="@+id/updateQizeMark"
+        android:layout_marginTop="204dp"
         android:ems="10"
-        android:hint="Enter new Phone"
+        android:hint="Enter final mark"
         android:inputType="phone" />
 
     <Button
-        android:id="@+id/btnOK"
+        android:id="@+id/btnUpdating"
         android:layout_width="112dp"
         android:layout_height="48dp"
         android:layout_alignParentStart="true"
@@ -62,7 +48,7 @@
         android:textColor="@color/White" />
 
     <Button
-        android:id="@+id/btnDelete"
+        android:id="@+id/btnDeleting"
         android:layout_width="112dp"
         android:layout_height="48dp"
         android:layout_alignParentStart="true"
@@ -99,44 +85,47 @@
 
     <TextView
         android:id="@+id/textView12"
-        android:layout_width="wrap_content"
+        android:layout_width="55dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginEnd="313dp"
+        android:layout_marginRight="313dp"
         android:layout_marginTop="112dp"
-        android:layout_marginEnd="329dp"
-        android:layout_marginRight="329dp"
-        android:text="Name"
+        android:text="Quiz:"
         android:textColor="@color/black"
         android:textSize="18sp" />
 
     <TextView
         android:id="@+id/textView12"
-        android:layout_width="wrap_content"
+        android:layout_width="64dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginTop="177dp"
-        android:layout_marginEnd="328dp"
-        android:layout_marginRight="328dp"
-        android:text="Email"
+        android:layout_alignBaseline="@+id/updateMidUpdate"
+        android:layout_marginEnd="-30dp"
+        android:layout_toStartOf="@+id/stdID"
+        android:text="Mid:"
         android:textColor="@color/black"
         android:textSize="18sp" />
 
     <TextView
         android:id="@+id/textView12"
-        android:layout_width="wrap_content"
+        android:layout_width="61dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginTop="251dp"
-        android:layout_marginEnd="328dp"
-        android:layout_marginRight="328dp"
-        android:text="Phone"
+        android:layout_alignBottom="@+id/updateFinalMark"
+        android:layout_alignParentStart="true"
+        android:text="Final:"
         android:textColor="@color/black"
         android:textSize="18sp" />
+
+    <EditText
+        android:id="@+id/updateMidUpdate"
+        android:layout_width="294dp"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/updateQizeMark"
+        android:layout_below="@+id/updateQizeMark"
+        android:ems="10"
+        android:hint="Enter mid mark"
+        android:inputType="textPersonName" />
 
 </RelativeLayout>

@@ -124,6 +124,7 @@ public class ParentHome extends AppCompatActivity implements NavigationView.OnNa
                 break;
             case R.id.nav_out:
 
+                FirebaseAuth.getInstance().signOut();
 
                 // auth.signOut();
                 Toast.makeText(getApplicationContext(), "Signout successfully" , Toast.LENGTH_SHORT).show();

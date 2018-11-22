@@ -7,15 +7,18 @@ public class NoteModel {
     public String noteTitle;
     public String noteTime;
 
+    public String name;
+
     public NoteModel() {
 
     }
     //constructor
 
 
-    public NoteModel(String noteTitle, String noteTime) {
+    public NoteModel(String noteTitle, String noteTime , String name) {
         this.noteTitle = noteTitle;
         this.noteTime = noteTime;
+        this.name = name;
     }
 
     public String getNoteTitle()
@@ -31,7 +34,17 @@ public class NoteModel {
         return noteTime;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public void setNoteTime(String noteTime) { this.noteTime = noteTime;
+
+
     }
 }
 

@@ -1,11 +1,9 @@
 package com.example.wafa.studentapp;
 
-
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
@@ -29,15 +27,16 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.HashMap;
 import java.util.Map;
 
-public class NewNote extends AppCompatActivity {
+public class NewCourse extends AppCompatActivity {
 
     private Button btnCreate;
+
     private EditText etTitle, etContent;
 
     private FirebaseAuth fAuth;
     private DatabaseReference fNotesDatabase , reference;
 
-    public String noteID ,title, content;
+    public String course_id ,title, content;
 
     private TextView viewName;
     private boolean isExist;
@@ -53,16 +52,16 @@ public class NewNote extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_new_note);
+        setContentView(R.layout.activity_new_course);
 
         viewName = (TextView) findViewById(R.id.txtname);
 
         try {
-            noteID = getIntent().getStringExtra("noteId");
+            course_id = getIntent().getStringExtra("course_id");
 
             //Toast.makeText(this, noteID, Toast.LENGTH_SHORT).show();
 
-            if (!noteID.trim().equals("")) {
+            if (!course_id.trim().equals("")) {
                 isExist = true;
             } else {
                 isExist = false;
@@ -73,18 +72,16 @@ public class NewNote extends AppCompatActivity {
         }
 
 
-        btnCreate = (Button) findViewById(R.id.new_note_btn);
-        etTitle = (EditText) findViewById(R.id.new_note_title);
-        etContent = (EditText) findViewById(R.id.new_note_content);
-
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        btnCreate = (Button) findViewById(R.id.new_course_btn);
+        etTitle = (EditText) findViewById(R.id.new_course_title);
+        etContent = (EditText) findViewById(R.id.new_course_content);
 
 
         fAuth = FirebaseAuth.getInstance();
-        fNotesDatabase = FirebaseDatabase.getInstance().getReference().child("Notes").child(fAuth.getCurrentUser().getUid());
-        reference = FirebaseDatabase.getInstance().getReference().child("Student").child(fAuth.getCurrentUser().getUid());
+        fNotesDatabase = FirebaseDatabase.getInstance().getReference().child("Courses").child("IT215").child(fAuth.getCurrentUser().getUid());
 
+
+        reference = FirebaseDatabase.getInstance().getReference().child("Teachers").child(fAuth.getCurrentUser().getUid());
 
         reference.addValueEventListener(new ValueEventListener() {
 
@@ -92,11 +89,12 @@ public class NewNote extends AppCompatActivity {
 
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
                 final User info = new User();
 
                 for(DataSnapshot ds : dataSnapshot.getChildren()){
 
-                    final String name = info.setName(dataSnapshot.child("name").getValue().toString());
+                    final String name = info.setCoursename(dataSnapshot.child("coursename").getValue().toString());
 
                     viewName.setText(name);
 
@@ -114,15 +112,14 @@ public class NewNote extends AppCompatActivity {
         });
 
 
-
         btnCreate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
 
                 title = etTitle.getText().toString().trim();
-               content = etContent.getText().toString().trim();
-               // String name = viewName.setText().toString();
+                content = etContent.getText().toString().trim();
+                // String name = viewName.setText().toString();
 
 
 
@@ -138,19 +135,20 @@ public class NewNote extends AppCompatActivity {
         });
 
         putData();
+
     }
 
     private void putData() {
 
         if (isExist) {
 
-            fNotesDatabase.child(noteID).addValueEventListener(new ValueEventListener() {
+            fNotesDatabase.child(course_id).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    if (dataSnapshot.hasChild("title") && dataSnapshot.hasChild("content")) {
+                    if (dataSnapshot.hasChild("mark") && dataSnapshot.hasChild("content")) {
 
 
-                        String title = dataSnapshot.child("title").getValue().toString();
+                        String title = dataSnapshot.child("mark").getValue().toString();
                         String content = dataSnapshot.child("content").getValue().toString();
 
                         etTitle.setText(title);
@@ -165,7 +163,6 @@ public class NewNote extends AppCompatActivity {
             });
         }
     }
-
     private void createNote(String title, String content) {
 
         if (fAuth.getCurrentUser() != null) {
@@ -173,11 +170,11 @@ public class NewNote extends AppCompatActivity {
             if (isExist) {
                 // UPDATE A NOTE
                 Map updateMap = new HashMap();
-                updateMap.put("title", etTitle.getText().toString().trim());
+                updateMap.put("mark", etTitle.getText().toString().trim());
                 updateMap.put("content", etContent.getText().toString().trim());
                 updateMap.put("timestamp", ServerValue.TIMESTAMP);
 
-                fNotesDatabase.child(noteID).updateChildren(updateMap);
+                fNotesDatabase.child(course_id).updateChildren(updateMap);
 
                 Toast.makeText(this, "Note updated0", Toast.LENGTH_SHORT).show();
             } else {
@@ -186,9 +183,9 @@ public class NewNote extends AppCompatActivity {
                 final DatabaseReference newNoteRef = fNotesDatabase.push();
 
                 final Map noteMap = new HashMap();
-                noteMap.put("title", title);
+                noteMap.put("mark", title);
                 noteMap.put("content", content);
-                noteMap.put("name", viewName.getText().toString());
+                noteMap.put("coursename", viewName.getText().toString());
                 noteMap.put("timestamp", ServerValue.TIMESTAMP);
 
                 Thread mainThread = new Thread(new Runnable() {
@@ -198,9 +195,9 @@ public class NewNote extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 if (task.isSuccessful()) {
-                                    Toast.makeText(NewNote.this, "Note added to database", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(NewCourse.this, "Note added to database", Toast.LENGTH_SHORT).show();
                                 } else {
-                                    Toast.makeText(NewNote.this, "ERROR: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(NewCourse.this, "ERROR: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                                 }
 
                             }
@@ -217,8 +214,6 @@ public class NewNote extends AppCompatActivity {
         }
 
     }
-
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -242,16 +237,16 @@ public class NewNote extends AppCompatActivity {
 
     private void deleteNote() {
 
-        fNotesDatabase.child(noteID).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+        fNotesDatabase.child(course_id).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
-                    Toast.makeText(NewNote.this, "Note Deleted", Toast.LENGTH_SHORT).show();
-                    noteID = "no";
+                    Toast.makeText(NewCourse.this, "Note Deleted", Toast.LENGTH_SHORT).show();
+                    course_id = "no";
                     finish();
                 } else {
                     Log.e("NewNoteActivity", task.getException().toString());
-                    Toast.makeText(NewNote.this, "ERROR: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(NewCourse.this, "ERROR: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
         });

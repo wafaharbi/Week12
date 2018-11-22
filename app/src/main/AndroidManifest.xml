@@ -130,7 +130,19 @@
         <activity android:name=".CreateNote" />
         <activity android:name=".Alert" />
         <activity android:name=".Edit_Note" />
-        <activity android:name=".View_Note"></activity>
+        <activity android:name=".View_Note" />
+        <activity android:name=".test" />
+        <activity android:name=".testingList" />
+        <activity android:name=".Courses" />
+        <activity android:name=".NewCourse" />
+        <activity android:name=".CourseIT215" />
+        <activity android:name=".editStudentIT215" />
+        <activity android:name=".IT215MarkUpdate" />
+        <activity android:name=".Testing" />
+        <activity android:name=".CourseIT443" />
+        <activity android:name=".editStudentIT443" />
+        <activity android:name=".IT443MarkUpdate" />
+        <activity android:name=".CourseIT342"></activity>
     </application>
 
 </manifest>

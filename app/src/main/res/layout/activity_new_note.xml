@@ -31,10 +31,16 @@
             android:alpha=".3"
             android:background="@android:color/black" />
 
+        <TextView
+            android:id="@+id/txtname"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="TextView" />
+
         <EditText
             android:id="@+id/new_note_content"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="399dp"
             android:layout_weight="1"
             android:background="@android:color/transparent"
             android:ems="10"

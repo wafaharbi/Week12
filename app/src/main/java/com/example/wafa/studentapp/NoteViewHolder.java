@@ -21,6 +21,7 @@ public class NoteViewHolder extends RecyclerView.ViewHolder {
         textTime = mView.findViewById(R.id.note_time);
         noteCard = mView.findViewById(R.id.note_card);
 
+
     }
 
     public void setNoteTitle(String title) {

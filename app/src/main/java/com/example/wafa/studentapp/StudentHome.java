@@ -120,7 +120,10 @@ public class StudentHome extends AppCompatActivity implements NavigationView.OnN
             case R.id.nav_out:
 
 
-                auth.signOut();
+                FirebaseUser fuser= FirebaseAuth.getInstance().getCurrentUser();
+                DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Student").child(fuser.getUid());
+                FirebaseAuth.getInstance().signOut();
+               // auth.signOut();
                 Toast.makeText(getApplicationContext(), "Signout successfully" , Toast.LENGTH_SHORT).show();
                 finish();
                 Intent v = new Intent(this,LoginStudent.class);
